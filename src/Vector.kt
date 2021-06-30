@@ -43,7 +43,6 @@ data class VectorImpl(
         return sqrt((from.y - this.y).pow(2) + (from.x - this.x).pow(2))
     }
 
-
     operator fun plus(that: Vector) {
         this.x += that.x
         this.y += that.y
