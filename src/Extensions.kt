@@ -11,7 +11,10 @@ fun randomSign() =
 fun randomFloat(from: Float, to: Float, sign: Boolean = false): Float =
     Random.nextDouble(from.toDouble(), to.toDouble()).toFloat() * if (sign) randomSign() else 1
 
-fun randomFloat(value: Float = 0f, sign: Boolean = false): Float =
-    Random.nextFloat() * if (sign) randomSign() else 1
+fun randomFloat(value: Float = 0f, sign: Boolean = false): Float = when (value) {
+    0f -> Random.nextFloat() * if (sign) randomSign() else 1
+    else -> randomFloat(-1 * value, value, sign)
+}
+
 
 
