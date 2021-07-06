@@ -2,12 +2,11 @@ import kotlin.math.*
 
 
 fun main() {
-    val vector = vector(1f, 0f, 0f)
-    val vector2 = vector(0f, 1f, 0f)
+    val vector = vector(4f, 6f)
+    val vector2 = vector(0f, -1f)
     println(
         """
-        ${vector.angleBetween(vector2)}
-        ${PI / 2}
+        ${vector.reflection(vector2)}
     """.trimIndent()
     )
 }
@@ -102,6 +101,11 @@ interface Vector {
 
     /** create new copy of the existing instance **/
     fun clone(x: Float = this.x, y: Float = this.y, z: Float = this.z): Vector
+
+    /**
+     * Reflect the incoming vector about a normal to a line/surface
+     */
+    fun reflection(surfaceVector: Vector): Vector
 
     override fun toString(): String
 }
@@ -237,6 +241,20 @@ data class VectorImpl(
         val angleRads = (acos(min(1f, max(-1f, dotMag)))) * /*axis*/(sign(cross(vector).z))
         return Angle.Rads(angleRads)
     }
+
+    /**
+     * Reflect the incoming vector about a normal to a line/surface
+     */
+    override fun reflection(surfaceVector: Vector): Vector {
+        val vector = surfaceVector.clone() as VectorImpl
+        vector.normalize()
+        val dotSurface = 2 * this.dot(vector)
+        vector * dotSurface
+        val reflection = this.copy()
+        reflection - vector
+        return reflection
+    }
+
 
     /**
      * Linear interpolate the vector to another vector
