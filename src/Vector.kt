@@ -183,14 +183,17 @@ data class VectorImpl(
      * Calculates the dot product of two vectors.
      */
     override fun dot(vector: Vector): Float {
-        TODO("Not yet implemented")
+        return (this.x * vector.x) + (this.y * vector.y) + (this.z * vector.z)
     }
 
     /**
      * Calculates and returns a vector composed of the cross product between two vectors
      */
     override fun cross(vector: Vector): Vector {
-        TODO("Not yet implemented")
+        val x = (this.y * vector.z) - (this.z * vector.y)
+        val y = (this.z * vector.x) - (this.x * vector.z)
+        val z = (this.x * vector.y) - (this.y * vector.x)
+        return vector(x, y, z)
     }
 
     /**
