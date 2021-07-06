@@ -2,12 +2,12 @@ import kotlin.math.*
 
 
 fun main() {
-    val vector = vector(0f, 0f)
-    val target = vector(100f, 100f)
+    val vector = vector(1f, 0f, 0f)
+    val vector2 = vector(0f, 1f, 0f)
     println(
         """
-        ${vector.linearInterpolateTo(target, 0.3f)}
-        $vector
+        ${vector.angleBetween(vector2)}
+        ${PI / 2}
     """.trimIndent()
     )
 }
@@ -118,7 +118,7 @@ data class VectorImpl(
     }
 
     override fun toString(): String {
-        return "x->$x,y->$y,z->$z,mag->$magnitude"
+        return "[$x,$y,$z],mag->$magnitude"
     }
 
     /**
@@ -233,7 +233,9 @@ data class VectorImpl(
      * and give the angle in radians.
      */
     override fun angleBetween(vector: Vector): Angle.Rads {
-        TODO("Not yet implemented")
+        val dotMag = dot(vector) / (this.magnitude * vector.magnitude);
+        val angleRads = (acos(min(1f, max(-1f, dotMag)))) * /*axis*/(sign(cross(vector).z))
+        return Angle.Rads(angleRads)
     }
 
     /**
