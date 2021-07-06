@@ -1,24 +1,27 @@
 import kotlin.math.*
 
 
-fun main(){
-    val vector = vector(50f,50f)
-    println("""
-        ${vector}
-        ${vector.magnitude}
-        ${vector.magnitudeSquare}
-        ${vector.set(3f)}
-        ${vector}
-        ${vector.limit(2f)}
-        ${vector}
-        ${vector.normalize()}
-        ${vector}
-        ${vector.distance(vectorRandom2D())}
-        ${vector.heading()}
-        wip setHeading
-        //0.7853981633974483
-    """.trimIndent())
+fun main() {
+    val vector = vector(0f, 0f)
+    val target = vector(100f, 100f)
+    println(
+        """
+        ${vector.linearInterpolateTo(target, 0.3f)}
+        $vector
+    """.trimIndent()
+    )
 }
+
+sealed class Angle {
+    data class Degree(val degree: Float) : Angle() {
+        fun inRad(): Float = Math.toRadians(degree.toDouble()).toFloat()
+    }
+
+    data class Rads(val rads: Float) : Angle() {
+        fun inDegree(): Float = Math.toDegrees(rads.toDouble()).toFloat()
+    }
+}
+
 
 interface Vector {
     val x: Float
@@ -66,22 +69,41 @@ interface Vector {
     /**
      * Calculates the dot product of two vectors.
      */
-    fun dot(vector: Vector) : Float
+    fun dot(vector: Vector): Float
 
     /**
      * Calculates and returns a vector composed of the cross product between two vectors
      */
-    fun cross(vector: Vector) : Vector
+    fun cross(vector: Vector): Vector
 
     /**
      * Calculate the angle of rotation for this vector(only 2D vectors) in Radian
      */
-    fun heading():Float
+    fun heading(): Angle.Rads
 
     /**
      * Rotate the vector to a specific angle (only 2D vectors), magnitude remains the same
      */
-    fun setHeading(rotateBy: Float)
+    fun setHeading(rotateBy: Angle)
+
+    /** Rotate the vector by an angle (only 2D vectors), magnitude remains the same **/
+    fun rotate(angle: Angle)
+
+    /**
+     * Calculates the angle between two vectors.
+     * and give the angle in radians.
+     */
+    fun angleBetween(vector: Vector): Angle.Rads
+
+    /**
+     * Linear interpolate the vector to another vector
+     */
+    fun linearInterpolateTo(target: Vector, amount: Float)
+
+    /** create new copy of the existing instance **/
+    fun clone(x: Float = this.x, y: Float = this.y, z: Float = this.z): Vector
+
+    override fun toString(): String
 }
 
 data class VectorImpl(
@@ -89,6 +111,15 @@ data class VectorImpl(
     override var y: Float,
     override var z: Float,
 ) : Vector {
+
+    /** create new copy of the existing instance **/
+    override fun clone(x: Float, y: Float, z: Float): Vector {
+        return copy(x = x, y = y, z = z)
+    }
+
+    override fun toString(): String {
+        return "x->$x,y->$y,z->$z,mag->$magnitude"
+    }
 
     /**
      * Calculates the magnitude (length) of the vector and returns the result as a float
@@ -158,25 +189,57 @@ data class VectorImpl(
     /**
      * Calculates and returns a vector composed of the cross product between two vectors
      */
-    override fun cross(vector: Vector) : Vector {
+    override fun cross(vector: Vector): Vector {
         TODO("Not yet implemented")
     }
 
     /**
      * Calculate the angle of rotation for this vector(only 2D vectors) in Radian
      */
-    override fun heading(): Float {
-        val angleInRad = atan((y/x).toDouble())
-        return angleInRad.toFloat()
+    override fun heading(): Angle.Rads {
+        val rads = atan((y / x))
+        return Angle.Rads(rads)
     }
 
     /**
      * Rotate the vector to a specific angle (only 2D vectors), magnitude remains the same
      */
-    override fun setHeading(rotateBy: Float) {
+    override fun setHeading(rotateBy: Angle) {
+        val rotateByRads = when (rotateBy) {
+            is Angle.Degree -> rotateBy.inRad()
+            is Angle.Rads -> rotateBy.rads
+        }
         val mag = this.magnitude
-        this.x = mag * cos(rotateBy.toDouble()).toFloat()
-        this.y = mag * sin(rotateBy.toDouble()).toFloat()
+        this.x = mag * cos(rotateByRads)
+        this.y = mag * sin(rotateByRads)
+    }
+
+    /** Rotate the vector by an angle (only 2D vectors), magnitude remains the same **/
+    override fun rotate(angle: Angle) {
+        val rotateByRads = when (angle) {
+            is Angle.Degree -> angle.inRad()
+            is Angle.Rads -> angle.rads
+        }
+        val currentAngle = heading().rads
+        val updatedAngle = currentAngle + rotateByRads
+        setHeading(Angle.Rads(updatedAngle))
+    }
+
+    /**
+     * Calculates the angle between two vectors.
+     * and give the angle in radians.
+     */
+    override fun angleBetween(vector: Vector): Angle.Rads {
+        TODO("Not yet implemented")
+    }
+
+    /**
+     * Linear interpolate the vector to another vector
+     */
+    override fun linearInterpolateTo(target: Vector, amount: Float) {
+        this.x += (target.x - this.x) * amount
+        this.y += (target.y - this.y) * amount
+        this.z += (target.z - this.z) * amount
     }
 
     /**
@@ -231,7 +294,6 @@ data class VectorImpl(
             this.z %= value
         }
     }
-
 
 
 }
