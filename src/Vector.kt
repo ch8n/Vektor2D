@@ -1,16 +1,6 @@
 import kotlin.math.*
 
 
-fun main() {
-    val vector = vector(4f, 6f)
-    val vector2 = vector(0f, -1f)
-    println(
-        """
-        ${vector.reflection(vector2)}
-    """.trimIndent()
-    )
-}
-
 sealed class Angle {
     data class Degree(val degree: Float) : Angle() {
         fun inRad(): Float = Math.toRadians(degree.toDouble()).toFloat()
@@ -20,7 +10,6 @@ sealed class Angle {
         fun inDegree(): Float = Math.toDegrees(rads.toDouble()).toFloat()
     }
 }
-
 
 interface Vector {
     val x: Float
@@ -116,6 +105,35 @@ interface Vector {
      * Check if coordinates of vectors are equal
      */
     fun equalCoordinates(that: Vector): Boolean
+
+    /**
+     * Adds x, y, and z components to a vector, adds one vector to another,
+     * or adds two independent vectors together.
+     */
+    operator fun plus(that: Vector)
+
+    /**
+     * Subtracts x, y, and z components from a vector, subtracts one vector from another,
+     * or subtracts two independent vectors.
+     */
+    operator fun minus(that: Vector)
+
+    /**
+     * Multiplies the vector by a scalar, multiplies the x, y, and z components from a vector,
+     * or multiplies the x, y, and z components of two independent vectors
+     */
+    operator fun times(value: Float)
+
+    /**
+     *  Divides the vector by a scalar, divides a vector by the x, y, and z arguments,
+     *  or divides the x, y, and z components of two vectors against each other.
+     */
+    operator fun div(value: Float)
+
+    /**
+     * Gives remainder of a vector when it is divided by another vector
+     */
+    operator fun rem(value: Float)
 }
 
 
@@ -282,7 +300,7 @@ data class VectorImpl(
      * Adds x, y, and z components to a vector, adds one vector to another,
      * or adds two independent vectors together.
      */
-    operator fun plus(that: Vector) {
+    override operator fun plus(that: Vector) {
         this.x += that.x
         this.y += that.y
         this.z += that.z
@@ -292,7 +310,7 @@ data class VectorImpl(
      * Subtracts x, y, and z components from a vector, subtracts one vector from another,
      * or subtracts two independent vectors.
      */
-    operator fun minus(that: Vector) {
+    override operator fun minus(that: Vector) {
         this.x -= that.x
         this.y -= that.y
         this.z -= that.z
@@ -302,7 +320,7 @@ data class VectorImpl(
      * Multiplies the vector by a scalar, multiplies the x, y, and z components from a vector,
      * or multiplies the x, y, and z components of two independent vectors
      */
-    operator fun times(value: Float) {
+    override operator fun times(value: Float) {
         this.x *= value
         this.y *= value
         this.z *= value
@@ -312,7 +330,7 @@ data class VectorImpl(
      *  Divides the vector by a scalar, divides a vector by the x, y, and z arguments,
      *  or divides the x, y, and z components of two vectors against each other.
      */
-    operator fun div(value: Float) {
+    override operator fun div(value: Float) {
         if (value > 0) {
             this.x /= value
             this.y /= value
@@ -323,7 +341,7 @@ data class VectorImpl(
     /**
      * Gives remainder of a vector when it is divided by another vector
      */
-    operator fun rem(value: Float) {
+    override operator fun rem(value: Float) {
         if (value > 0) {
             this.x %= value
             this.y %= value
