@@ -108,7 +108,11 @@ interface Vector {
     fun reflection(surfaceVector: Vector): Vector
 
     override fun toString(): String
+
+    fun valueEqual(that: Vector): Boolean
 }
+
+fun Vector.toList() = listOf<Float>(this.x, this.y, this.z)
 
 data class VectorImpl(
     override var x: Float,
@@ -123,6 +127,10 @@ data class VectorImpl(
 
     override fun toString(): String {
         return "[$x,$y,$z],mag->$magnitude"
+    }
+
+    override fun valueEqual(that: Vector): Boolean {
+        return (this.x == that.x) && (this.y == that.y) && (this.z == that.z)
     }
 
     /**
@@ -317,7 +325,5 @@ data class VectorImpl(
             this.z %= value
         }
     }
-
-
 }
 
