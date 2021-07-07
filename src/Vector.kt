@@ -85,7 +85,9 @@ interface Vector {
      */
     fun setHeading(rotateBy: Angle)
 
-    /** Rotate the vector by an angle (only 2D vectors), magnitude remains the same **/
+    /**
+     * Rotate the vector by an angle (only 2D vectors), magnitude remains the same
+     * */
     fun rotate(angle: Angle)
 
     /**
@@ -99,7 +101,8 @@ interface Vector {
      */
     fun linearInterpolateTo(target: Vector, amount: Float)
 
-    /** create new copy of the existing instance **/
+    /**
+     *  create new copy of the existing instance **/
     fun clone(x: Float = this.x, y: Float = this.y, z: Float = this.z): Vector
 
     /**
@@ -109,7 +112,10 @@ interface Vector {
 
     override fun toString(): String
 
-    fun valueEqual(that: Vector): Boolean
+    /**
+     * Check if coordinates of vectors are equal
+     */
+    fun equalCoordinates(that: Vector): Boolean
 }
 
 fun Vector.toList() = listOf<Float>(this.x, this.y, this.z)
@@ -129,7 +135,7 @@ data class VectorImpl(
         return "[$x,$y,$z],mag->$magnitude"
     }
 
-    override fun valueEqual(that: Vector): Boolean {
+    override fun equalCoordinates(that: Vector): Boolean {
         return (this.x == that.x) && (this.y == that.y) && (this.z == that.z)
     }
 
