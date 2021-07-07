@@ -118,7 +118,6 @@ interface Vector {
     fun equalCoordinates(that: Vector): Boolean
 }
 
-fun Vector.toList() = listOf<Float>(this.x, this.y, this.z)
 
 data class VectorImpl(
     override var x: Float,

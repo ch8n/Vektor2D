@@ -31,3 +31,8 @@ fun vectorRandom2D(
     vector.normalize()
     return vector
 }
+
+/**
+ * Vector as List
+ */
+fun Vector.toList() = listOf<Float>(this.x, this.y, this.z)
