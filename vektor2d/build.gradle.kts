@@ -7,9 +7,10 @@
  */
 
 plugins {
-    kotlin("jvm") version "1.5.10"
+    kotlin("jvm")
     id("java-library")
 }
+
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
