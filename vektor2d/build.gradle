@@ -7,21 +7,21 @@
  */
 
 plugins {
-    kotlin("jvm")
-    id("java-library")
+    id 'java-library'
+    id 'org.jetbrains.kotlin.jvm' version '1.5.21'
 }
-
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-}
-
 
 repositories {
     mavenCentral()
 }
 
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+}
+
+
 dependencies {
-    implementation(kotlin("stdlib"))
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
 }
